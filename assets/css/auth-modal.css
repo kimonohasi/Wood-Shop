@@ -1,0 +1,119 @@
+/* ============================================================
+   Auth modal (đăng nhập / đăng ký / quên mật khẩu)
+   Style theo bản mẫu: card bo góc lớn, nền surface, căn giữa,
+   tự thích ứng light/dark qua token --wc-* của theme.
+   ============================================================ */
+
+.auth-modal-dialog { max-width: 460px; }
+
+.auth-modal-card {
+    border: 1px solid var(--wc-border);
+    border-radius: 18px;
+    background: var(--wc-surface);
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+}
+
+.auth-modal-card .modal-body {
+    padding: 42px 38px 34px;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+}
+
+.auth-modal-close { position: absolute; top: 14px; right: 14px; z-index: 5; }
+
+.auth-modal-title {
+    color: var(--wc-primary);
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: center;
+    margin: 0;
+}
+
+.auth-modal-sub {
+    color: var(--wc-muted);
+    font-size: .85rem;
+    text-align: center;
+    margin: .35rem 0 0;
+}
+
+.auth-modal .form-check-input:checked { background-color: var(--wc-secondary); border-color: var(--wc-secondary); }
+
+.auth-label { font-weight: 600; font-size: .84rem; margin-bottom: .35rem; }
+
+.auth-modal .form-control {
+    border-radius: 8px;
+    border-color: var(--wc-border);
+    padding: .65rem .85rem;
+}
+
+.auth-modal .form-control:focus {
+    border-color: var(--wc-secondary);
+    box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--wc-secondary) 18%, transparent);
+}
+
+.auth-remember { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+.auth-switch-link { color: var(--wc-secondary); font-weight: 600; font-size: .84rem; text-decoration: none; }
+.auth-switch-link:hover { color: var(--wc-primary); }
+
+/* Khung reCAPTCHA */
+.auth-robot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: fit-content;
+}
+
+/* Nút CTA chính */
+.auth-modal .auth-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: .65rem;
+    font-weight: 600;
+    padding: .7rem 1rem;
+}
+
+/* Phân cách "hoặc" */
+.auth-or { display: flex; align-items: center; gap: 12px; color: var(--wc-muted); font-size: .8rem; }
+.auth-or::before, .auth-or::after { content: ""; flex: 1; height: 1px; background: var(--wc-border); }
+
+/* Nút Google (có chức năng thật) */
+.auth-google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: .7rem 1rem;
+    border: 1px solid var(--wc-border);
+    border-radius: .65rem;
+    background: var(--wc-surface);
+    color: var(--wc-text);
+    font-weight: 600;
+    font-size: .95rem;
+    transition: background .15s ease;
+}
+.auth-google-btn:hover { background: color-mix(in srgb, var(--wc-border) 35%, var(--wc-surface)); }
+
+/* Lỗi inline */
+.auth-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 1rem;
+    padding: .7rem .9rem;
+    border: 1px solid var(--bs-danger-border-subtle);
+    border-radius: .6rem;
+    background: var(--bs-danger-bg-subtle);
+    color: var(--bs-danger-text-emphasis);
+    font-size: .85rem;
+}
+.auth-error[hidden] { display: none; }
+
+.auth-modal-foot { font-size: .85rem; text-align: center; color: var(--wc-muted); margin-bottom: 0; }
+.auth-modal-foot .btn { font-size: .85rem; }
+
+/* Nút Header chuyển từ <a> sang <button> */
+button.app-btn-login { border: 0; cursor: pointer; }

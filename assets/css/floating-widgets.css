@@ -1,0 +1,509 @@
+/* =====================================================================
+   WoodCon - floating-widgets.css
+   Pill button + Chat AI + Liên hệ hỗ trợ
+   ===================================================================== */
+
+/* ============================================================
+   PILL FLOATING BUTTON
+   ============================================================ */
+.wc-pill-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1040;
+  display: flex;
+  flex-direction: column;
+  width: 60px;
+  background: var(--wc-primary);
+  color: var(--wc-on-primary);
+  border-radius: 9999px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(45, 36, 30, .4);
+}
+
+.wc-pill-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  padding: 12px 4px 11px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background .15s ease, filter .15s ease;
+  font-family: inherit;
+}
+.wc-pill-item:hover {
+  background: color-mix(in srgb, #ffffff 14%, transparent);
+  filter: brightness(1.08);
+}
+.wc-pill-item:active {
+  filter: brightness(0.94);
+}
+.wc-pill-item .icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.wc-pill-label {
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  letter-spacing: .2px;
+}
+
+.wc-pill-divider {
+  height: 1px;
+  background: color-mix(in srgb, #ffffff 28%, transparent);
+  margin: 0;
+}
+
+/* ============================================================
+   PANELS (Chat + Liên hệ)
+   ============================================================ */
+.wc-panel {
+  position: fixed;
+  bottom: 104px;
+  right: 24px;
+  z-index: 1050;
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  height: 580px;
+  max-height: calc(100vh - 120px);
+  background: var(--wc-surface);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .22);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: wcPanelIn .25s ease;
+}
+.wc-panel.d-none {
+  display: none !important;
+}
+
+.wc-chat-panel {
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  height: 580px;
+  max-height: calc(100vh - 120px);
+  border-radius: 24px;
+}
+
+.wc-contact-panel {
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  height: 460px;
+  max-height: calc(100vh - 120px);
+  border-radius: 24px;
+}
+
+@keyframes wcPanelIn {
+  from { opacity: 0; transform: translateY(12px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.wc-panel-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  background: var(--wc-primary);
+  color: var(--wc-on-primary);
+  border-radius: 24px 24px 0 0;
+  overflow: hidden;
+}
+.wc-panel-header::after {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: color-mix(in srgb, #ffffff 18%, transparent);
+  filter: blur(18px);
+  pointer-events: none;
+}
+.wc-panel-header .icon { font-size: 26px; position: relative; z-index: 1; }
+.wc-panel-title { font-size: 1.15rem; font-weight: 800; line-height: 1.25; position: relative; z-index: 1; }
+.wc-panel-subtitle { font-size: .78rem; opacity: .88; line-height: 1.3; position: relative; z-index: 1; }
+.wc-panel-close {
+  margin-left: auto;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+  position: relative;
+  z-index: 1;
+}
+.wc-panel-close:hover { background: rgba(255, 255, 255, .18); }
+.wc-panel-close .icon { font-size: 22px; }
+
+/* ============================================================
+   CHAT PANEL
+   ============================================================ */
+.wc-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: color-mix(in srgb, var(--wc-border) 30%, var(--wc-surface));
+}
+
+.wc-chat-msg { display: flex; gap: 10px; align-items: flex-end; max-width: 86%; }
+.wc-chat-msg-bot  { align-self: flex-start; }
+.wc-chat-msg-user { align-self: flex-end; flex-direction: row-reverse; }
+
+.wc-chat-avatar-bot {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 50%;
+  background: var(--wc-primary);
+  color: var(--wc-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wc-chat-avatar-bot .icon { font-size: 20px; }
+
+.wc-chat-bubble {
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: .92rem;
+  line-height: 1.55;
+  word-break: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .05);
+}
+.wc-chat-msg-bot .wc-chat-bubble {
+  background: var(--wc-surface);
+  color: var(--wc-text);
+  border-bottom-left-radius: 6px;
+}
+.wc-chat-msg-user .wc-chat-bubble {
+  background: var(--wc-primary);
+  color: var(--wc-on-primary);
+  border-bottom-right-radius: 6px;
+}
+
+.wc-chat-typing { display: flex; gap: 5px; padding: 12px 16px; }
+.wc-chat-typing span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--wc-outline-variant);
+  animation: wcChatDot 1.2s ease-in-out infinite;
+}
+.wc-chat-typing span:nth-child(2) { animation-delay: .2s; }
+.wc-chat-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes wcChatDot {
+  0%, 80%, 100% { transform: translateY(0); opacity: .4; }
+  40%           { transform: translateY(-4px); opacity: 1; }
+}
+
+.wc-chat-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--wc-border);
+  background: var(--wc-surface);
+}
+.wc-chat-textbox {
+  flex: 1;
+  border: 1px solid var(--wc-border);
+  border-radius: 9999px;
+  padding: 12px 18px;
+  font-size: .92rem;
+  outline: none;
+  background: color-mix(in srgb, var(--wc-border) 22%, var(--wc-surface));
+  color: var(--wc-text);
+  transition: border-color .15s;
+  min-height: 44px;
+}
+.wc-chat-textbox::placeholder { color: var(--wc-muted); }
+.wc-chat-textbox:focus { border-color: var(--wc-secondary); }
+
+.wc-chat-send {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--wc-primary);
+  color: var(--wc-on-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, transform .15s;
+  flex: 0 0 42px;
+}
+.wc-chat-send:hover { background: var(--wc-primary-soft); transform: scale(1.06); }
+.wc-chat-send:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+/* Quick reply chips */
+.wc-chat-sugg {
+  padding: 0 0 6px;
+  animation: wcChatFadeIn .3s ease;
+}
+.wc-chat-sugg-label {
+  font-size: .78rem;
+  color: var(--wc-muted);
+  display: block;
+  margin-bottom: 8px;
+  padding-left: 2px;
+  font-weight: 600;
+}
+.wc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  border: 1px solid var(--wc-border);
+  background: var(--wc-surface);
+  color: var(--wc-text);
+  font-size: .82rem;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+  font-family: inherit;
+  font-weight: 500;
+}
+.wc-chip:hover {
+  background: var(--wc-primary);
+  color: var(--wc-on-primary);
+  border-color: var(--wc-primary);
+  transform: translateY(-1px);
+}
+@keyframes wcChatFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Product cards trong chat */
+.wc-product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+.wc-product-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--wc-surface);
+  border: 1px solid var(--wc-border);
+  border-radius: 14px;
+  padding: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow .15s;
+}
+.wc-product-card:hover { box-shadow: 0 4px 14px rgba(45, 36, 30, .14); }
+.wc-product-card-img {
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: color-mix(in srgb, var(--wc-border) 28%, var(--wc-surface));
+}
+.wc-product-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.wc-product-card-name {
+  font-size: .86rem;
+  font-weight: 600;
+  color: var(--wc-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.wc-product-card-price { font-size: .86rem; color: var(--wc-secondary); font-weight: 700; }
+.wc-product-card-old { font-size: .74rem; color: var(--wc-muted); text-decoration: line-through; }
+.wc-product-card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 5px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: var(--wc-primary);
+  color: var(--wc-on-primary);
+  font-size: .74rem;
+  border: 0;
+  cursor: pointer;
+  transition: background .15s;
+  align-self: flex-start;
+  font-family: inherit;
+  font-weight: 600;
+}
+.wc-product-card-btn:hover { background: var(--wc-primary-soft); }
+
+/* ============================================================
+   CONTACT PANEL
+   ============================================================ */
+.wc-contact-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--wc-surface);
+}
+.wc-contact-status {
+  display: flex;
+  justify-content: center;
+}
+.wc-contact-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, .92);
+  color: var(--wc-success);
+  font-size: .88rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+  backdrop-filter: blur(6px);
+  position: relative;
+}
+.wc-contact-badge::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--wc-success);
+  box-shadow: 0 0 0 3px rgba(46, 125, 91, .25);
+  animation: wcPulse 1.6s ease-in-out infinite;
+}
+@keyframes wcPulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(46, 125, 91, .25); }
+  50%      { box-shadow: 0 0 0 6px rgba(46, 125, 91, .08); }
+}
+
+.wc-contact-channels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.wc-contact-channel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--wc-border);
+  background: var(--wc-surface);
+  color: var(--wc-text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .95rem;
+  transition: all .18s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+}
+.wc-contact-channel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .1);
+  background: color-mix(in srgb, var(--wc-border) 30%, var(--wc-surface));
+}
+.wc-contact-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+}
+.wc-contact-icon-box .icon { font-size: 22px; color: #fff; }
+.wc-contact-channel-phone .wc-contact-icon-box { background: #2d7d5b; }
+.wc-contact-channel-zalo .wc-contact-icon-box { background: #2d8cf0; }
+.wc-contact-channel-messenger .wc-contact-icon-box { background: #7b4ee6; }
+.wc-contact-channel-text { flex: 1; }
+.wc-contact-arrow { 
+  font-size: 20px; 
+  color: var(--wc-muted); 
+  opacity: .7;
+}
+
+.wc-contact-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+  color: var(--wc-muted);
+  font-size: .84rem;
+}
+.wc-contact-footer a {
+  color: var(--wc-secondary);
+  text-decoration: none;
+  font-weight: 600;
+}
+.wc-contact-footer a:hover { text-decoration: underline; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 480px) {
+  .wc-pill-fab {
+    bottom: 18px;
+    right: 18px;
+    width: 56px;
+  }
+  .wc-pill-item {
+    padding: 11px 4px 10px;
+  }
+  .wc-pill-item .icon { font-size: 22px; }
+  .wc-pill-label { font-size: .66rem; }
+
+  .wc-chat-panel {
+    bottom: 90px;
+    right: 12px;
+    width: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
+    height: auto;
+    max-height: 85vh;
+    border-radius: 20px;
+  }
+  .wc-contact-panel {
+    bottom: 90px;
+    right: 12px;
+    width: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
+    height: auto;
+    max-height: 70vh;
+    border-radius: 20px;
+  }
+  .wc-panel-header {
+    border-radius: 20px 20px 0 0;
+    padding: 16px 18px;
+  }
+  .wc-panel-title { font-size: 1.05rem; }
+  .wc-contact-body { padding: 14px; }
+  .wc-chat-messages { padding: 14px; }
+  .wc-chat-input { padding: 10px 12px; }
+  .wc-chat-textbox { padding: 10px 16px; min-height: 42px; }
+  .wc-chat-send { width: 40px; height: 40px; flex: 0 0 40px; }
+}

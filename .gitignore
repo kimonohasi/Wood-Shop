@@ -1,0 +1,45 @@
+# ===== Composer dependencies =====
+/vendor/
+
+# ===== Environment / secrets =====
+.env
+.env.*
+!.env.example
+
+# ===== Cấu hình local — secret nằm trong .env, KHÔNG commit =====
+# config/config.php + config/db.php là code thuần (không secret) → được commit.
+# Bản mẫu secret: .env.example (commit) -> copy thành .env (bị ignore).
+config/*.local.php
+
+# ===== Logs & runtime =====
+*.log
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/debugbar/
+
+# ===== Uploads do người dùng (giữ .htaccess bảo vệ) =====
+/uploads/*
+!/uploads/.htaccess
+!/uploads/.gitkeep
+
+# ===== Backup cục bộ (dump SQL, bản mirror) - đã có hệ thống backup riêng =====
+# Chỉ thư mục dữ liệu/dữ liệu nhạy cảm bị ignore; scripts + README vẫn được track.
+/backup/db/
+/backup/uploads/
+/backup/logs/
+/backup/scripts/local.config.ps1
+
+# ===== File nháp / tạm thời =====
+*.bak
+.htaccess.bak
+*.sql.zip
+
+# ===== OS / IDE =====
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo

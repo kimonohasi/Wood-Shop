@@ -1,0 +1,44 @@
+# =====================================================================
+# WoodCon - Apache rewrite + security
+# =====================================================================
+
+Options -Indexes
+ServerSignature Off
+
+RewriteEngine On
+
+# -------- Chặn truy cập thư mục nhạy cảm --------
+RewriteRule ^(config|includes|models|controllers|storage|exports|web|admin|backup)/ - [F,L]
+
+# -------- Chặn truy cập file nhạy cảm --------
+<FilesMatch "\.(env|env\..+|ini|log|sql|sqlite|sqlite3|sh|json|lock|gitignore|gitattributes|md|yml|yaml|dist|swp|swo|bak|backup)$">
+    Require all denied
+</FilesMatch>
+
+# -------- Chặn file cấu hình / vendor ở gốc --------
+<FilesMatch "^(composer\.(json|lock)|package(-lock)?\.json|\.env(\..+)?|README\.md|PLAN_.*|PROMPT_.*|prompt_.*|logic_.*|AGENTS\.md|kilo\.json|\.user\.ini)$">
+    Require all denied
+</FilesMatch>
+
+# -------- Chặn chạy file PHP trong uploads --------
+# (Phòng upload shell PHP) — áp dụng cho file .htaccess riêng trong uploads/ để giải quyết giới hạn của AllowOverride
+# Xem uploads/.htaccess
+
+# -------- Security headers --------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header unset X-Powered-By
+</IfModule>
+
+# -------- Bảo vệ file ẩn --------
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# -------- Không rewrite file/thư mục tồn tại thật --------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]

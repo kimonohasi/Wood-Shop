@@ -1,0 +1,4 @@
+# Exports chỉ phục vụ qua PHP (qua controller), không truy cập trực tiếp
+<FilesMatch "*">
+    Require all denied
+</FilesMatch>

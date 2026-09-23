@@ -1,0 +1,44 @@
+/* =====================================================================
+   WoodCon - theme-view-transition.css
+   Hiệu ứng đổi dark/light mode (View Transitions API) cho cả frontend + admin.
+   - Vòng tròn (circle with blur) lan tỏa từ nút dark mode.
+   - Tâm/bán kính động lấy từ biến CSS --x, --y, --r (do JS set).
+   - Thời gian ~0.65s, easing expo-out.
+   Chỉ nằm trong file CSS này, không viết inline trong HTML.
+   ===================================================================== */
+
+/* Đăng ký biến động để animate bán kính vòng tròn */
+@property --wc-reveal {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* Bỏ animation mặc định (crossfade), dùng mask để điều khiển vùng hiện */
+html.wc-vt-on::view-transition-old(root),
+html.wc-vt-on::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Layer mới: chỉ hiện trong vòng tròn từ nút, viền mờ (blur) */
+html.wc-vt-on::view-transition-new(root) {
+  animation: wc-reveal-circle 0.65s cubic-bezier(0.16, 1, 0.3, 1) both; /* expo-out */
+  -webkit-mask:
+    radial-gradient(circle at var(--x) var(--y),
+      #000 0%,
+      #000 var(--wc-reveal),
+      rgba(0, 0, 0, 0.55) calc(var(--wc-reveal) + 4%),
+      transparent calc(var(--wc-reveal) + 7%));
+  mask:
+    radial-gradient(circle at var(--x) var(--y),
+      #000 0%,
+      #000 var(--wc-reveal),
+      rgba(0, 0, 0, 0.55) calc(var(--wc-reveal) + 4%),
+      transparent calc(var(--wc-reveal) + 7%));
+}
+
+@keyframes wc-reveal-circle {
+  from { --wc-reveal: 0px; }
+  to   { --wc-reveal: var(--r); }
+}

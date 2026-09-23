@@ -1,0 +1,67 @@
+/* =====================================================================
+   WoodCon - Goong Maps autocomplete + map picker (frontend + admin dùng chung)
+   ===================================================================== */
+
+.goong-wrap { position: relative; }
+
+/* Dropdown gợi ý địa chỉ */
+.goong-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1080;
+  margin-top: 4px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--wc-surface, #fff);
+  border: 1px solid var(--wc-border, rgba(0,0,0,.12));
+  border-radius: .5rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  overflow-anchor: none;
+}
+.goong-dropdown .goong-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0,0,0,.05);
+}
+.goong-dropdown .goong-item:last-child { border-bottom: 0; }
+.goong-dropdown .goong-item .goong-icon {
+  color: var(--wc-secondary, #8a5a44);
+  line-height: 1.4;
+  font-size: .95rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.goong-dropdown .goong-item .goong-text {
+  font-size: .875rem;
+  line-height: 1.4;
+}
+.goong-dropdown .goong-item.goong-active,
+.goong-dropdown .goong-item:hover { background: rgba(0,0,0,.04); }
+
+.goong-map-box {
+  margin-top: .5rem;
+  border: 1px solid var(--wc-border, rgba(0,0,0,.12));
+  border-radius: .5rem;
+  overflow: hidden;
+  background: var(--wc-surface, #fff);
+}
+.goong-map-box .goong-map {
+  height: 260px;
+  width: 100%;
+  z-index: 0;
+}
+.goong-map-tip {
+  font-size: .8125rem;
+  color: var(--wc-muted, #6c757d);
+  padding: .375rem .75rem;
+  border-top: 1px solid var(--wc-border, rgba(0,0,0,.08));
+}
+
+/* Leaflet ghim khi kéo */
+.leaflet-marker-draggable { cursor: grab; }
+.leaflet-marker-draggable:active { cursor: grabbing; }

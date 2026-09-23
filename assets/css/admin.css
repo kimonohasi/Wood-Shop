@@ -1,0 +1,252 @@
+/* =====================================================================
+   WoodCon - admin.css (GIAI ĐOẠN 6)
+   Design system giao diện admin theo PROMPT_MASTER_ADMIN_UI:
+   - Light mode mặc định + Dark mode
+   - Sidebar cố định, thu gọn icon-only
+   - Dashboard Bento Grid + skeleton
+   - Command Palette Ctrl+K
+   Nguyên tắc BẤT DI BẤT DỊCH: KHÔNG mất chức năng (đối chiếu nút/cột/bộ lọc).
+   ===================================================================== */
+
+/* Tokens riêng cho admin (bёр đậm hơn một chút so với frontend) */
+body.admin-layout {
+  background-color: var(--wc-bg);
+  font-size: .95rem;
+  --ad-sidebar-w: 262px;
+  --ad-sidebar-w-collapsed: 76px;
+  --ad-topbar-h: 60px;
+  --ad-radius: 1rem;
+  --ad-glow: 0 8px 30px rgba(45,36,30,.08);
+}
+
+/* ================= SIDEBAR ================= */
+body.admin-layout .admin-sidebar {
+  width: var(--ad-sidebar-w);
+  flex-shrink: 0;
+  background: var(--wc-surface);
+  border-right: 1px solid var(--wc-border);
+  height: 100vh;
+  position: sticky; top: 0;
+  overflow-y: auto; overflow-x: hidden;
+  transition: width .22s ease;
+  display: flex; flex-direction: column;
+  z-index: 1040;
+}
+body.admin-layout .admin-sidebar .sidebar-inner { display: flex; flex-direction: column; flex-grow: 1; }
+
+/* Logo */
+body.admin-layout .admin-sidebar .app-brand { flex-shrink: 0; }
+body.admin-layout .admin-sidebar .app-brand-text { white-space: nowrap; overflow: hidden; transition: opacity .15s ease, width .22s ease; }
+body.admin-layout .admin-sidebar .app-brand-mark {
+  width: 38px; height: 38px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--wc-primary); color: var(--wc-on-primary); border-radius: .7rem; font-weight: 800; font-size: 1.15rem;
+}
+
+/* Nav */
+body.admin-layout .admin-nav-label {
+  font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--wc-muted);
+  padding: .75rem 1rem .35rem; white-space: nowrap; overflow: hidden;
+}
+body.admin-layout .admin-nav-item {
+  display: flex; align-items: center; gap: .8rem;
+  padding: .62rem .85rem; border-radius: .6rem;
+  color: var(--wc-on-surface-variant); font-size: .9rem; font-weight: 600;
+  text-decoration: none; white-space: nowrap;
+  transition: background-color .15s ease, color .15s ease, width .22s ease;
+}
+body.admin-layout .admin-nav-item .icon {
+  width: 1.35rem; text-align: center; font-size: 1.1rem; flex-shrink: 0; color: var(--wc-muted);
+}
+body.admin-layout .admin-nav-item span { overflow: hidden; }
+body.admin-layout .admin-nav-item:hover { background: var(--wc-surface-hi); color: var(--wc-text); }
+body.admin-layout .admin-nav-item.active { background: var(--wc-primary); color: var(--wc-on-primary); }
+body.admin-layout .admin-nav-item.active .icon { color: var(--wc-on-primary); }
+
+/* Sidebar thu gọn (icon-only) */
+body.admin-layout .admin-sidebar.collapsed { width: var(--ad-sidebar-w-collapsed); }
+body.admin-layout .admin-sidebar.collapsed .admin-brand-box { justify-content: center; }
+body.admin-layout .admin-sidebar.collapsed .app-brand-text,
+body.admin-layout .admin-sidebar.collapsed .admin-nav-item span,
+body.admin-layout .admin-sidebar.collapsed .admin-nav-label,
+body.admin-layout .admin-sidebar.collapsed .admin-sidebar-foot span {
+  opacity: 0; width: 0; pointer-events: none;
+}
+body.admin-layout .admin-sidebar.collapsed .admin-nav-item { justify-content: center; padding-inline: .6rem; position: relative; }
+body.admin-layout .admin-sidebar.collapsed .admin-nav-item:hover::after {
+  content: attr(data-tip); position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%);
+  background: var(--wc-primary); color: var(--wc-on-primary); font-size: .75rem; font-weight: 600;
+  padding: .35rem .6rem; border-radius: .4rem; z-index: 1060; white-space: nowrap;
+}
+body.admin-layout .admin-sidebar.collapsed .admin-nav-item .badge { position: absolute; top: 4px; right: 6px; font-size: .6rem; }
+
+body.admin-layout .admin-collapse-toggle { color: var(--wc-muted); }
+body.admin-layout .admin-collapse-toggle .icon { transition: transform .18s ease; font-size: 1rem; }
+body.admin-layout .admin-sidebar.collapsed .admin-collapse-toggle .icon { transform: rotate(180deg); }
+body.admin-layout .admin-sidebar.collapsed .admin-brand-box { gap: .35rem; }
+
+body.admin-layout .admin-sidebar-backdrop { display: none; }
+
+/* Sidebar footer (collapse toggle + logout) */
+body.admin-layout .admin-sidebar-foot { border-top: 1px solid var(--wc-border); padding: .75rem .85rem; }
+
+/* ================= TOPBAR ================= */
+body.admin-layout .admin-topbar {
+  position: sticky; top: 0; z-index: 1035; height: var(--ad-topbar-h);
+  background: color-mix(in srgb, var(--wc-surface) 82%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--wc-border);
+}
+body.admin-layout .admin-topbar .admin-search {
+  background: var(--wc-surface-low); border: 1px solid var(--wc-border); border-radius: .6rem;
+  color: var(--wc-text); min-width: 220px;
+}
+body.admin-layout .admin-topbar .admin-search:focus { box-shadow: 0 0 0 .2rem rgba(124,87,48,.15); border-color: var(--wc-secondary); }
+body.admin-layout .admin-kbd {
+  font-size: .7rem; border: 1px solid var(--wc-outline-variant); border-radius: .3rem;
+  padding: .1rem .35rem; color: var(--wc-muted); background: var(--wc-surface);
+}
+
+/* ================= MAIN ================= */
+body.admin-layout main { min-height: calc(100vh - var(--ad-topbar-h)); }
+
+/* Page header thống nhất */
+body.admin-layout .admin-page-head { margin-bottom: 1.25rem; }
+body.admin-layout .admin-page-title { font-family: var(--wc-font-heading); font-weight: 800; letter-spacing: -.02em; margin: 0; }
+
+/* ================= CARD / STAT (Bento) ================= */
+body.admin-layout .admin-card {
+  background: var(--wc-surface); border: 1px solid var(--wc-border);
+  border-radius: var(--ad-radius); box-shadow: var(--ad-glow);
+  overflow: hidden;
+}
+body.admin-layout .admin-card .card-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--wc-border); font-weight: 700; }
+body.admin-layout .admin-card .card-body { padding: 1.25rem; }
+
+body.admin-layout .admin-stat {
+  background: var(--wc-surface); border: 1px solid var(--wc-border);
+  border-radius: var(--ad-radius); padding: 1.2rem 1.3rem;
+  box-shadow: var(--ad-glow);
+  transition: transform .15s ease, box-shadow .15s ease;
+  position: relative; overflow: hidden;
+}
+body.admin-layout .admin-stat:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(45,36,30,.12); }
+body.admin-layout .admin-stat::after {
+  content: ''; position: absolute; right: -24px; top: -24px; width: 90px; height: 90px; border-radius: 50%;
+  background: color-mix(in srgb, var(--wc-secondary) 10%, transparent);
+}
+body.admin-layout .admin-stat .stat-icon { font-size: 1.25rem; color: var(--wc-secondary); }
+body.admin-layout .admin-stat .stat-value { font-family: var(--wc-font-heading); font-weight: 800; font-size: 1.55rem; letter-spacing: -.02em; }
+body.admin-layout .admin-stat .stat-label { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--wc-muted); font-weight: 700; }
+
+/* Bento grid */
+body.admin-layout .bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1rem; }
+body.admin-layout .bento > * { grid-column: span 12; }
+@media (min-width: 992px) {
+  body.admin-layout .bento .col-6s { grid-column: span 6; }
+  body.admin-layout .bento .col-4s { grid-column: span 4; }
+  body.admin-layout .bento .col-8s { grid-column: span 8; }
+  body.admin-layout .bento .col-3s { grid-column: span 3; }
+}
+
+/* ================= TABLE ================= */
+body.admin-layout .admin-table { font-size: .875rem; margin: 0; }
+body.admin-layout .admin-table thead th {
+  background: var(--wc-surface-low); position: sticky; top: 0; z-index: 5;
+  font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--wc-muted); font-weight: 700;
+  border-bottom: 1px solid var(--wc-border); white-space: nowrap;
+}
+body.admin-layout .admin-table td, body.admin-layout .admin-table th { padding: .7rem .9rem; vertical-align: middle; }
+body.admin-layout .admin-table tbody tr { transition: background-color .12s ease; }
+body.admin-layout .admin-table tbody tr:hover { background-color: var(--wc-surface-hi); }
+body.admin-layout .admin-table .money { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ================= FORMS ================= */
+body.admin-layout .form-control, body.admin-layout .form-select {
+  background-color: var(--wc-surface); border: 1px solid var(--wc-outline-variant);
+  color: var(--wc-text);
+}
+body.admin-layout .form-control:focus, body.admin-layout .form-select:focus {
+  border-color: var(--wc-secondary); box-shadow: 0 0 0 .2rem rgba(124,87,48,.15);
+  background-color: var(--wc-surface); color: var(--wc-text);
+}
+body.admin-layout label.form-label { font-size: .8rem; font-weight: 600; color: var(--wc-on-surface-variant); }
+
+/* ================= EMPTY STATE ================= */
+body.admin-layout .empty-state {
+  text-align: center; padding: 3rem 1rem; color: var(--wc-muted);
+}
+body.admin-layout .empty-state .icon { font-size: 2rem; display: block; margin-bottom: .5rem; opacity: .55; }
+body.admin-layout .empty-state .btn { margin-top: .5rem; }
+
+/* ================= SKELETON ================= */
+body.admin-layout .skeleton {
+  background: linear-gradient(90deg, var(--wc-surface-low) 25%, var(--wc-surface-hi) 50%, var(--wc-surface-low) 75%);
+  background-size: 200% 100%; animation: ad-shimmer 1.3s infinite; border-radius: .5rem;
+}
+@keyframes ad-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ================= COMMAND PALETTE (Ctrl+K) ================= */
+#app-palette { background: rgba(0,0,0,.5); backdrop-filter: blur(3px); }
+#app-palette .palette-box { max-width: 620px; border-radius: var(--ad-radius); box-shadow: var(--wc-shadow); border:1px solid var(--wc-border); }
+#app-palette .palette-input {
+  border: 0; outline: 0; font-size: 1rem; width: 100%;
+  background: transparent; color: var(--wc-text);
+}
+#app-palette .palette-item {
+  display: flex; align-items: center; gap: .6rem; padding: .6rem .8rem; border-radius: .5rem;
+  color: var(--wc-text); cursor: pointer; text-decoration: none; font-size: .9rem;
+}
+#app-palette .palette-item:hover, #app-palette .palette-item.active { background: var(--wc-surface-hi); }
+#app-palette .palette-item .icon { color: var(--wc-muted); width: 1.2rem; text-align: center; }
+
+/* ================= DARK MODE (override) ================= */
+body.theme-dark.admin-layout { background-color: #0f0f11; }
+body.theme-dark.admin-layout .admin-topbar { background: color-mix(in srgb, #121212 82%, transparent); }
+body.theme-dark.admin-layout .admin-sidebar { background: #121212; border-color: #1f1f22; }
+body.theme-dark.admin-layout .admin-table thead th { background: #161619; color: #8e8d8a; border-color: #1f1f22; }
+body.theme-dark.admin-layout .admin-table tbody tr:hover { background-color: #1a1a1d; }
+body.theme-dark.admin-layout .skeleton {
+  background: linear-gradient(90deg, #161619 25%, #222226 50%, #161619 75%);
+  background-size: 200% 100%; animation: ad-shimmer 1.3s infinite;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 991px) {
+  body.admin-layout .admin-sidebar {
+    position: fixed; left: -290px; width: var(--ad-sidebar-w) !important; z-index: 1050;
+    transition: left .25s ease; box-shadow: 0 0 40px rgba(0,0,0,.2);
+  }
+  body.admin-layout .admin-sidebar.open { left: 0; }
+  body.admin-layout .admin-sidebar.collapsed .app-brand-text,
+  body.admin-layout .admin-sidebar.collapsed .admin-nav-item span,
+  body.admin-layout .admin-sidebar.collapsed .admin-nav-label { opacity: 1; width: auto; pointer-events: auto; }
+  body.admin-layout .admin-sidebar-backdrop.show { display: block; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 1045; }
+}
+
+/* ===== Product form: accordion + variants (WoodCon) ===== */
+.admin-accordion{display:flex;flex-direction:column;gap:12px;margin-bottom:96px}
+.admin-accordion .accordion-item{border:1px solid var(--ad-border,#e2e8f0);border-radius:10px;overflow:hidden;background:#fff}
+.admin-accordion .accordion-button{font-weight:600;padding:14px 18px;box-shadow:none}
+.admin-accordion .accordion-button:not(.collapsed){background:#f8fafc;color:inherit;box-shadow:none}
+.admin-accordion .accordion-button:focus{box-shadow:none;border-color:transparent}
+.admin-accordion .accordion-button .icon{color:var(--ad-primary,#0f766e)}
+.admin-accordion .accordion-body{background:#fff;padding:18px}
+.acc-check{margin-left:auto;order:2;width:20px;height:20px;min-width:20px;border-radius:50%;border:2px solid #cbd5e1;display:inline-flex;align-items:center;justify-content:center;font-size:.72rem;line-height:1;color:#fff;transition:.15s}
+.acc-check::after{content:"\2713"}
+.acc-check.done{background:#16a34a;border-color:#16a34a}
+.card-head{font-weight:600;padding:12px 14px;border-bottom:1px solid var(--ad-border,#e2e8f0);background:#f8fafc}
+.variant-thumb{width:44px;height:44px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;display:block}
+.variant-row td{padding:.5rem .4rem;vertical-align:middle}
+#variantTable th{font-weight:600;padding:.4rem .4rem;white-space:nowrap}
+.admin-sticky-save{position:sticky;bottom:0;left:0;right:0;z-index:1030;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border:1px solid #e2e8f0;border-radius:12px;padding:12px 16px;box-shadow:0 -4px 20px rgba(15,23,42,.08);margin-top:12px}
+.admin-sticky-save.is-floating{position:fixed;left:calc(var(--ad-sidebar-w,240px) + 24px);right:24px;bottom:16px}
+body.admin-layout .admin-sticky-save.is-floating{left:calc(var(--ad-sidebar-w,240px) + 24px);right:24px}
+@media (max-width: 991px){
+  .admin-sticky-save.is-floating, body.admin-layout .admin-sticky-save.is-floating{left:16px;right:16px;bottom:12px}
+}
+
+/* Ẩn mũi tên chevron accordion: chỉ cần ấn thanh là trải (dropdown tự biết) */
+.admin-accordion .accordion-button::after,
+.admin-accordion .accordion-button:not(.collapsed)::after{display:none}
+.admin-accordion .accordion-button{justify-content:flex-start}
+.admin-accordion .accordion-button .acc-check{margin-left:10px;order:1}
