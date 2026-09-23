@@ -1,13 +1,13 @@
 # WoodCon - Shop đồ nội thất gỗ
 
-Website thương mại điện tử bán nội thất gỗ viết bằng **PHP Native (>= 8.0)**, không framework, kèm **Bootstrap 5 + jQuery/AJAX**. Chạy ổn định trên **XAMPP** (Apache + MySQL/MariaDB).
+Website thương mại điện tử bán nội thất gỗ viết bằng **PHP Native (>= 8.1)**, không framework, kèm **Bootstrap 5 + jQuery/AJAX**. Chạy ổn định trên **XAMPP** (Apache + MySQL/MariaDB).
 
 ## Yêu cầu hệ thống
 
-- PHP >= 8.0 (khuyến nghị 8.0+ hoặc 8.2)
+- PHP >= 8.1 (khuyến nghị 8.1 / 8.2+)
 - MySQL 5.7+ / MariaDB 10.4+
 - Apache với `mod_rewrite` (bật sẵn trong XAMPP)
-- Composer (chỉ để cài `phpoffice/phpspreadsheet` phục vụ xuất Excel)
+- Composer — cài 2 thư viện: `phpmailer/phpmailer` (gửi mail qua SMTP) và `phpoffice/phpspreadsheet` (xuất báo cáo Excel)
 
 > Nếu dự án chưa có thư mục `vendor/`, chạy `composer install` trong thư mục gốc sau khi copy.
 
@@ -38,7 +38,9 @@ Website thương mại điện tử bán nội thất gỗ viết bằng **PHP N
    - Mở `.env`, điều chỉnh `DB_NAME` cho **khớp chính xác** tên database bạn đã tạo
      ở bước 3 (mặc định `woodcon_shop`), điền user/password MySQL của bạn, và dán các key Google OAuth / reCAPTCHA thật:
    ```
-   # Ví dụ khung — điền giá trị theo môi trường của bạn
+   # Ví dụ khung — file chuẩn đầy đủ kèm chú thích nằm ở `.env.example`
+   APP_DEBUG=0
+
    DB_HOST   = 127.0.0.1
    DB_NAME   = woodcon_shop
    DB_USER   = your_mysql_user
@@ -49,13 +51,17 @@ Website thương mại điện tử bán nội thất gỗ viết bằng **PHP N
    GOOGLE_CLIENT_SECRET=
    RECAPTCHA_SITE_KEY=
    RECAPTCHA_SECRET_KEY=
+
+   # (tuỳ chọn) Ghi đè BASE_URL khi Apache tự dò sai; hoặc ghi mật khẩu DB riêng
+   # cho script backup → # WOODSHOP_DB_PASS=...
+   # BASE_URL=https://domain-cua-ban.vn
    ```
    > Tên file `schema.sql` không quyết định tên DB thật — chỉ cần `DB_NAME` trong `.env`
    > trỏ đúng database bạn đã import là kết nối chạy.
    >
    > Không cần `.env` vẫn chạy được với cấu hình mặc định của XAMPP (database `woodcon_shop`).
    > `.env` dùng để ghi đè thông tin kết nối và khai báo secret.
-   > Trong production hãy đặt `APP_DEBUG=0`.
+   > Trong production hãy đặt `APP_DEBUG=0`. Thông tin chi tiết từng biến xem trong `.env.example`.
 
 5. **Cấp quyền ghi** cho các thư mục dữ liệu động (Windows thường tự có quyền):
    - `uploads/`   — ảnh sản phẩm/tin tức admin upload
@@ -92,18 +98,24 @@ mọi tài khoản demo dùng chung một mật khẩu:
 
 ```
 wood-shop/
+├─ includes/       Hàm dùng chung (functions.php, Mailer.php, ...)
 ├─ config/         Cấu hình toàn cục (BASE_URL, DB, session) + kết nối PDO
-├─ models/         Lớp nghiệp vụ (Product, Order, User, Voucher, Warranty, ...)
+├─ models/         Lớp nghiệp vụ (Product, Order, User, Voucher, Warranty, GoongService, ...)
 ├─ controllers/    Điều phối request (front + admin)
 ├─ web/views/      Template giao diện khách hàng
 │  └─ includes/    header/footer dùng chung (chỉ viết 1 nơi)
 ├─ admin/views/    Template khu vực quản trị
+├─ views/partials/ Một số partial render dùng chung
+├─ ajax/           Endpoint AJAX tách riêng (gọi theo action)
 ├─ assets/         CSS (theme.css, site.css, admin.css), JS, ảnh
 │  └─ images/shop/ Ảnh nội dung sản phẩm/nội thất (lưu local)
 ├─ uploads/        Ảnh admin upload (relative path)
 ├─ exports/        File báo cáo xuất ra
 ├─ storage/        Log hệ thống
+├─ backup/         Script sao lưu DB + hướng dẫn (xem mục "Sao lưu dữ liệu")
+├─ docs/           Tài liệu thiết kế chung (nội bộ)
 ├─ database/       Cấu trúc + dữ liệu seed (schema.sql)
+├─ .env.example    Bản mẫu biến môi trường (commit); `.env` thật bị git ignore
 └─ index.php       Front controller duy nhất (.htaccess rewrite về đây)
 ```
 
@@ -119,7 +131,20 @@ Tất cả ảnh hiển thị đều qua helper `image_url()` trong `includes/fu
 - **Bảo hành**: đăng ký bảo hành theo tem/serial, tra cứu, đổi trả trong 30 ngày, khiếu nại chất lượng 48h.
 - **Quản trị**: dashboard, sản phẩm/tồn kho, đơn hàng 8 trạng thái + duyệt huỷ, khách hàng, voucher, banner, tin tức, đánh giá, báo cáo tài chính, cài đặt.
 - **Xuất báo cáo**: CSV + Excel (.xlsx) ở Đơn hàng, Báo cáo tài chính, Sản phẩm, Khách hàng.
+- **Xác thực & tích hợp** (cấu hình tại **Quản trị → Cài đặt → Tích hợp**, key chỉ nằm phía server): đăng nhập **Google OAuth**, **reCAPTCHA v2** bảo vệ login/register/quên mật khẩu, **Goong Maps** gợi ý địa chỉ + geocode ngược ở checkout (có cache tiết kiệm quota), **eSMS** gửi OTP/ảo số điện thoại, **Gemini AI** chatbot, **SMTP** gửi email qua PHPMailer.
 - **Bảo mật**: PDO prepared statement (chống SQLi), escape `e()` (chống XSS), CSRF token mọi form, session cookie secure/httponly, `.htaccess` chặn truy cập trực tiếp `config|includes|models|controllers|storage|exports`.
+
+## Sao lưu dữ liệu
+
+Có sẵn script PowerShell trong `backup/` (đọc `backup/README.md` để biết thêm):
+- `scripts/backup-db.ps1` — dump database + thư mục dữ liệu, giữ lịch sử vài ngày, có thể push bản copy ra ngoài máy (offsite).
+- Không đưa thư mục `backup/` hoặc bản dump vào git/public.
+
+## Ghi công ảnh & icon
+
+- Các icon liên hệ dùng icon thương hiệu **Icons8** (`assets/images/icons/icons8-*.png` — Zalo, Phone, Messenger). Theo giấy phép miễn phí của Icons8, khi sử dụng cần ghi công; thương hiệu icon thuộc về chủ sở hữu tương ứng.
+- Hình ảnh sản phẩm/nội thất trong `assets/images/shop/` chỉ mang tính **minh hoạ demo**, không kèm giấy phép thương mại — cần thay bằng ảnh của bạn khi kinh doanh thật.
+- Tài liệu thiết kế nội bộ nằm ở `docs/` (kèm trong repo). Nếu không muốn công khai, thêm `docs/` vào `.gitignore` trước khi push.
 
 ## ⚠️ Giới hạn pháp lý về hóa đơn / VAT
 
