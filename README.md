@@ -14,20 +14,20 @@ Website thương mại điện tử bán nội thất gỗ viết bằng **PHP N
 ## Cài đặt nhanh với XAMPP
 
 1. **Copy dự án** vào thư mục web của XAMPP:
-   - `C:\xampp\htdocs\wood-shop` (có thể đặt ở bất kỳ thư mục con nào dưới `htdocs`, `BASE_URL` tự dò)
+   - `<thư mục web>\wood-shop` (vd `htdocs\wood-shop`; có thể đặt ở bất kỳ thư mục con nào dưới `htdocs`, `BASE_URL` tự dò)
 
 2. **Khởi động Apache + MySQL** từ XAMPP Control Panel.
 
 3. **Import database**:
    - Mở phpMyAdmin → **New** tạo database mới (đặt tên tuỳ ý — mặc định là `woodcon_shop`),
    - chọn database vừa tạo → **Import** → chọn file `database/schema.sql` (đã có toàn bộ bảng + dữ liệu demo).
-   - Hoặc qua dòng lệnh:
+   - Hoặc qua dòng lệnh (thay `<user>`/`<dbname>` theo thông tin MySQL của bạn):
      ```
-     mysql -u root -p schema < database/schema.sql
+     mysql -u <user> -p <dbname> < database/schema.sql
      ```
      Nếu dùng PowerShell (không hỗ trợ `<`):
      ```powershell
-     Get-Content database/schema.sql -Raw | mysql -u root schema
+     Get-Content database/schema.sql -Raw | mysql -u <user> -p <dbname>
      ```
 
 4. **Cấu hình môi trường** (secret nằm trong file `.env` — file này bị git ignore,
@@ -36,13 +36,13 @@ Website thương mại điện tử bán nội thất gỗ viết bằng **PHP N
    Copy-Item .env.example .env
    ```
    - Mở `.env`, điều chỉnh `DB_NAME` cho **khớp chính xác** tên database bạn đã tạo
-     ở bước 3 (mặc định `woodcon_shop`), và dán các key Google OAuth / reCAPTCHA thật:
+     ở bước 3 (mặc định `woodcon_shop`), điền user/password MySQL của bạn, và dán các key Google OAuth / reCAPTCHA thật:
    ```
-   # Mặc định hợp XAMPP — chỉ sửa khi môi trường của bạn khác đi
+   # Ví dụ khung — điền giá trị theo môi trường của bạn
    DB_HOST   = 127.0.0.1
    DB_NAME   = woodcon_shop
-   DB_USER   = root
-   DB_PASS   =
+   DB_USER   = your_mysql_user
+   DB_PASS   = your_mysql_password
 
    # Để trống = tắt tính năng; BẮT BUỘC cấu hình khi đưa lên production
    GOOGLE_CLIENT_ID=
@@ -53,8 +53,8 @@ Website thương mại điện tử bán nội thất gỗ viết bằng **PHP N
    > Tên file `schema.sql` không quyết định tên DB thật — chỉ cần `DB_NAME` trong `.env`
    > trỏ đúng database bạn đã import là kết nối chạy.
    >
-   > Chạy **không cần** `.env` vẫn được: cấu hình mặc định đúng chuẩn XAMPP
-   > (root, không mật khẩu, `woodcon_shop`). `.env` chỉ dùng để ghi đè + cấp secret.
+   > Không cần `.env` vẫn chạy được với cấu hình mặc định của XAMPP (database `woodcon_shop`).
+   > `.env` dùng để ghi đè thông tin kết nối và khai báo secret.
    > Trong production hãy đặt `APP_DEBUG=0`.
 
 5. **Cấp quyền ghi** cho các thư mục dữ liệu động (Windows thường tự có quyền):
