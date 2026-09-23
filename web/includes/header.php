@@ -181,9 +181,9 @@ if ($__user) {
                             </label>
                             <button type="button" class="btn btn-link p-0 auth-switch-link" data-auth-goto="forgot">Quên mật khẩu?</button>
                         </div>
-                        <?php if (RECAPTCHA_SITE_KEY): ?>
+                        <?php if (setting_recaptcha_site_key() !== ''): ?>
                         <div class="auth-robot mb-3">
-                            <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+                            <div class="g-recaptcha" data-sitekey="<?= setting_recaptcha_site_key() ?>"></div>
                         </div>
                         <?php endif; ?>
                         <button class="btn btn-primary w-100 auth-submit" type="submit">
@@ -232,9 +232,9 @@ if ($__user) {
                             <label class="form-label auth-label">Mật khẩu</label>
                             <input type="password" class="form-control" name="password" minlength="6" required autocomplete="new-password" placeholder="Nhập mật khẩu">
                         </div>
-                        <?php if (RECAPTCHA_SITE_KEY): ?>
+                        <?php if (setting_recaptcha_site_key() !== ''): ?>
                         <div class="auth-robot mb-3">
-                            <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+                            <div class="g-recaptcha" data-sitekey="<?= setting_recaptcha_site_key() ?>"></div>
                         </div>
                         <?php endif; ?>
                         <button class="btn btn-primary w-100 auth-submit" type="submit">
@@ -281,9 +281,9 @@ if ($__user) {
                             <label class="form-label auth-label">Số điện thoại</label>
                             <input type="tel" class="form-control" name="phone" placeholder="Nhập số điện thoại đã đăng ký">
                         </div>
-                        <?php if (RECAPTCHA_SITE_KEY): ?>
+                        <?php if (setting_recaptcha_site_key() !== ''): ?>
                         <div class="auth-robot mb-3">
-                            <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+                            <div class="g-recaptcha" data-sitekey="<?= setting_recaptcha_site_key() ?>"></div>
                         </div>
                         <?php endif; ?>
                         <button class="btn btn-primary w-100 auth-submit" type="submit">

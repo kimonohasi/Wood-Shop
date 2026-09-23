@@ -333,6 +333,19 @@ body.theme-dark.admin-layout.admin-login-page {
   align-items: center;
 }
 
+/* password-toggle.js bọc input mật khẩu trong .wc-password-toggle: cho nó nở
+   đầy chiều rộng của wrapper để khớp chiều cao/khung ô tài khoản (fix UI). */
+.admin-login-input-wrap .wc-password-toggle {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+.admin-login-input-wrap .wc-password-toggle > input {
+  height: 46px;
+  box-sizing: border-box;
+}
+
 .admin-login-input {
   width: 100%;
   height: 46px;

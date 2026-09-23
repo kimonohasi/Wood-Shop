@@ -6,7 +6,7 @@ $isSuper = Admin::isSuper();
 
 // Các khóa chứa bí mật (mật khẩu / API key): KHÔNG đổ giá trị thật ra HTML,
 // chỉ hiển thị dạng password với placeholder "đã lưu".
-$__secretKeys = ['smtp_pass', 'ai_api_key', 'esms_secret', 'goong_api_key'];
+$__secretKeys = ['smtp_pass', 'ai_api_key', 'esms_secret', 'goong_api_key', 'google_client_secret', 'recaptcha_secret_key'];
 
 // Nhóm cài đặt truyền từ controller (mỗi nhóm có nút Lưu riêng)
 $sections = $settingsSections ?? [];

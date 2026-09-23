@@ -32,9 +32,9 @@ declare(strict_types=1);
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <a class="small" href="<?= BASE_URL ?>/quen-mat-khau">Quên mật khẩu?</a>
                         </div>
-                        <?php if (RECAPTCHA_SITE_KEY): ?>
-                        <div class="mb-3">
-                            <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+<?php if (setting_recaptcha_site_key() !== ''): ?>
+                        <div class="auth-robot mb-3">
+                            <div class="g-recaptcha" data-sitekey="<?= setting_recaptcha_site_key() ?>"></div>
                         </div>
                         <?php endif; ?>
                         <button class="btn btn-primary w-100">Đăng nhập</button>

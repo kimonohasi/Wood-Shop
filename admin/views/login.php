@@ -17,7 +17,7 @@ declare(strict_types=1);
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/theme.css?v=15">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/admin.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/admin-theme.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/admin-login.css?v=2">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/admin-login.css?v=3">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/password-toggle.css">
 </head>
 <body class="admin-layout admin-login-page">
@@ -105,9 +105,9 @@ autocomplete="current-password"
                         </div>
 
                         <!-- Xác thực reCAPTCHA - cùng cơ chế trang đăng nhập người dùng (RECAPTCHA_SITE_KEY) -->
-                        <?php if (RECAPTCHA_SITE_KEY): ?>
+                        <?php if (setting_recaptcha_site_key() !== ''): ?>
                         <div class="admin-login-field admin-recaptcha-field">
-                            <div class="g-recaptcha" id="adminRecaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+                            <div class="g-recaptcha" id="adminRecaptcha" data-sitekey="<?= setting_recaptcha_site_key() ?>"></div>
                         </div>
                         <?php endif; ?>
 

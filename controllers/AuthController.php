@@ -32,7 +32,7 @@ class AuthController extends BaseController
                 $this->fail('Phiên làm việc hết hạn.', self::FORM_BACK_ROUTES['login'], 419);
             }
             // Kiểm tra reCAPTCHA — bỏ qua khi chưa cấu hình (khớp verify_recaptcha ở admin)
-            if (RECAPTCHA_SECRET_KEY && !$this->verifyRecaptcha((string)$this->post('g-recaptcha-response'))) {
+            if (setting_recaptcha_secret_key() !== '' && !$this->verifyRecaptcha((string)$this->post('g-recaptcha-response'))) {
                 $this->fail('Vui lòng xác nhận bạn không phải người máy.', self::FORM_BACK_ROUTES['login']);
             }
             $account = trim((string)$this->post('account'));
@@ -190,7 +190,7 @@ class AuthController extends BaseController
     /** Bước 1: điều hướng sang Google để cấp quyền */
     public function googleStart(): never
     {
-        if (!defined('GOOGLE_CLIENT_ID') || !GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+        if (setting_oauth_google_id() === '' || setting_oauth_google_secret() === '') {
             set_flash('error', 'Đăng nhập bằng Google chưa được cấu hình. Hãy đăng nhập bằng email/SĐT.');
             redirect(BASE_URL . '/dang-nhap');
         }
@@ -199,7 +199,7 @@ class AuthController extends BaseController
         $_SESSION['oauth_next']  = trim((string)$this->get('next')) ?: ($_SESSION['login_redirect'] ?? '');
 
         $params = http_build_query([
-            'client_id'     => GOOGLE_CLIENT_ID,
+            'client_id'     => setting_oauth_google_id(),
             'redirect_uri'  => GOOGLE_REDIRECT_URI,
             'response_type' => 'code',
             'scope'         => 'openid email profile',
@@ -280,8 +280,8 @@ class AuthController extends BaseController
             CURLOPT_HTTPHEADER     => ['Content-Type: application/x-www-form-urlencoded'],
             CURLOPT_POSTFIELDS     => http_build_query([
                 'code'          => $code,
-                'client_id'     => GOOGLE_CLIENT_ID,
-                'client_secret' => GOOGLE_CLIENT_SECRET,
+                'client_id'     => setting_oauth_google_id(),
+                'client_secret' => setting_oauth_google_secret(),
                 'redirect_uri'  => GOOGLE_REDIRECT_URI,
                 'grant_type'    => 'authorization_code',
             ]),
@@ -325,7 +325,8 @@ class AuthController extends BaseController
     /** Trả lỗi: nếu AJAX -> JSON, nếu không -> flash + redirect về trang tương ứng */
     private function verifyRecaptcha(string $response): bool
     {
-        if (!RECAPTCHA_SECRET_KEY) {
+        $secret = setting_recaptcha_secret_key();
+        if ($secret === '') {
             return true; // Bỏ qua nếu chưa cấu hình
         }
         $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
@@ -333,7 +334,7 @@ class AuthController extends BaseController
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => http_build_query([
-                'secret'   => RECAPTCHA_SECRET_KEY,
+                'secret'   => $secret,
                 'response' => $response,
                 'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
             ]),

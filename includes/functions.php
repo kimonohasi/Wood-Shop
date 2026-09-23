@@ -196,7 +196,8 @@ function json_response(mixed $data, int $code = 200): never
  *  g-recaptcha-response, cùng secret, cùng API siteverify. */
 function verify_recaptcha(?string $response): bool
 {
-    if (!RECAPTCHA_SECRET_KEY) {
+    $secret = setting_recaptcha_secret_key();
+    if ($secret === '') {
         return true; // Chưa cấu hình -> bỏ qua (giữ nguyên hành vi hiện tại)
     }
     $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
@@ -204,7 +205,7 @@ function verify_recaptcha(?string $response): bool
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST           => true,
         CURLOPT_POSTFIELDS     => http_build_query([
-            'secret'   => RECAPTCHA_SECRET_KEY,
+            'secret'   => $secret,
             'response' => (string)$response,
             'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
         ]),
@@ -288,6 +289,33 @@ function get_setting(string $key, mixed $default = ''): mixed
         }
     }
     return array_key_exists($key, WoodConSettingsCache::$data) ? WoodConSettingsCache::$data[$key] : $default;
+}
+
+/** Đọc khóa tích hợp (Google OAuth / reCAPTCHA): ưu tiên cài đặt lưu trong DB (admin panel), fallback về .env. */
+function integration_setting(string $key, string $fallback): string
+{
+    $value = get_setting($key, '');
+    return is_scalar($value) && trim((string)$value) !== '' ? (string)$value : $fallback;
+}
+
+function setting_oauth_google_id(): string
+{
+    return integration_setting('google_client_id', defined('GOOGLE_CLIENT_ID') ? (string)GOOGLE_CLIENT_ID : '');
+}
+
+function setting_oauth_google_secret(): string
+{
+    return integration_setting('google_client_secret', defined('GOOGLE_CLIENT_SECRET') ? (string)GOOGLE_CLIENT_SECRET : '');
+}
+
+function setting_recaptcha_site_key(): string
+{
+    return integration_setting('recaptcha_site_key', defined('RECAPTCHA_SITE_KEY') ? (string)RECAPTCHA_SITE_KEY : '');
+}
+
+function setting_recaptcha_secret_key(): string
+{
+    return integration_setting('recaptcha_secret_key', defined('RECAPTCHA_SECRET_KEY') ? (string)RECAPTCHA_SECRET_KEY : '');
 }
 
 /**

@@ -2495,6 +2495,10 @@ class AdminController extends BaseController
                 'goong_autocomplete_enabled' => 'maps',
                 'goong_location_lat'         => 'maps',
                 'goong_location_lng'         => 'maps',
+                'google_client_id'           => 'auth',
+                'google_client_secret'       => 'auth',
+                'recaptcha_site_key'         => 'auth',
+                'recaptcha_secret_key'       => 'auth',
             ];
             // Nhóm cài đặt: slug => danh sách khóa thuộc nhóm
             $allowedGroups = [
@@ -2511,9 +2515,10 @@ class AdminController extends BaseController
                                 'invoice_email','invoice_number_prefix','invoice_footer','invoice_legal_note'],
                 'ai'        => ['ai_api_key','ai_models','ai_provider'],
                 'maps'      => ['goong_api_key','goong_autocomplete_enabled','goong_location_lat','goong_location_lng'],
+                'auth'      => ['google_client_id','google_client_secret','recaptcha_site_key','recaptcha_secret_key'],
             ];
             // Các khóa bí mật: nếu submit rỗng thì GIỮ NGUYÊN giá trị đã lưu (không ghi đè).
-            $secretKeys = ['smtp_pass', 'ai_api_key', 'esms_secret', 'goong_api_key'];
+            $secretKeys = ['smtp_pass', 'ai_api_key', 'esms_secret', 'goong_api_key', 'google_client_secret', 'recaptcha_secret_key'];
             // Chỉ lưu các field thuộc đúng nhóm (section) được submit
             $section = $this->post('section', '');
             if ($section === '' || !isset($allowedGroups[$section])) {
@@ -2561,6 +2566,14 @@ class AdminController extends BaseController
                     }
                     return ['ok' => $ready, 'message' => $msg];
                 }
+                case 'auth': {
+                    $missing = [];
+                    foreach (['google_client_id', 'google_client_secret', 'recaptcha_site_key', 'recaptcha_secret_key'] as $k) {
+                        if (trim((string)get_setting($k, '')) === '') $missing[] = $k;
+                    }
+                    $ready = count($missing) === 0;
+                    return ['ok' => $ready, 'message' => $ready ? 'Đã cấu hình Google OAuth + reCAPTCHA.' : 'Thiếu: ' . implode(', ', $missing) . '. (Để trống sẽ dùng giá trị .env.)'];
+                }
             }
             return ['ok' => false, 'message' => ''];
         };
@@ -2581,9 +2594,20 @@ class AdminController extends BaseController
                                         'goong_location_lat' => 'Tọa độ ưu tiên gợi ý - latitude (VD: 21.028511), để trống nếu không dùng',
                                         'goong_location_lng' => 'Tọa độ ưu tiên gợi ý - longitude (VD: 105.804817), để trống nếu không dùng',
                                 ],
-                                'status' => $statusOf('maps'),
+'status' => $statusOf('maps'),
                                 'test' => true,
-            ],
+                ],
+                'auth' => ['title' => 'Xác thực & tích hợp (Google OAuth + reCAPTCHA)', 'fields' => [
+                                        'google_client_id'     => 'Google OAuth 2.0 - Client ID (dùng cho "Đăng nhập bằng Google")',
+                                        'google_client_secret' => 'Google OAuth 2.0 - Client Secret',
+                                        'recaptcha_site_key'   => 'Google reCAPTCHA v2 - Site Key (hiển thị ở form đăng nhập/đăng ký)',
+                                        'recaptcha_secret_key' => 'Google reCAPTCHA v2 - Secret Key (xác thực server)',
+                                    ],
+                                    'note' => 'Chỉ tài khoản super admin chỉnh được và nó ưu tiên hơn .env: web sẽ dùng ngay giá trị đã lưu mà không cần đổi file .env. '
+                                            . 'Bí mật (Client Secret / reCAPTCHA Secret Key) để trống khi lưu nghĩa là giữ nguyên giá trị cũ. '
+                                            . 'Đăng ký cặp key tại Google Cloud Console (OAuth 2.0 Client ID) và google.com/recaptcha/admin (v2 Checkbox, đăng ký đúng domain thật của site).',
+                                    'status' => $statusOf('auth'),
+                ],
             ],
             'active' => 'settings',
             'activeSub' => 'settings',
