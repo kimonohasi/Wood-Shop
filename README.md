@@ -76,20 +76,34 @@ Website thương mại điện tử bán nội thất gỗ viết bằng **PHP N
 
 ## Tài khoản demo (seed `database/schema.sql`)
 
-Dữ liệu seed đã được **làm sạch** (thay dữ liệu thật bằng dữ liệu demo, `@example.com`);
-mọi tài khoản demo dùng chung một mật khẩu:
+Dữ liệu seed đã được **làm sạch** (thay dữ liệu thật bằng demo `@example.com` / `@woodcon.vn` demo);
+**mọi tài khoản demo dùng chung một mật khẩu: `demoadmin123`**
 
-| Vai trò | Email | Mật khẩu |
+**Khu vực quản trị** (`/quan-tri`):
+
+| Vai trò | Email |
+|---|---|
+| Super Admin | `admin@woodcon.vn` |
+| Quản lý kho | `kho@woodcon.vn` |
+| Kế toán | `ketoan@woodcon.vn` |
+| Trợ lý Admin | `troly@woodcon.vn` |
+| Nhân viên bán hàng 1 | `nv1@woodcon.vn` |
+| Nhân viên bán hàng 2 | `nv2@woodcon.vn` |
+| Nhân viên bán hàng 3 | `nv3@woodcon.vn` |
+| Nhân viên CSKH | `cskh@woodcon.vn` |
+| Nhân viên giao hàng | `shipper@woodcon.vn` |
+| Nhân viên kho 2 | `kho2@woodcon.vn` |
+
+**Khách hàng** (frontend store):
+
+| Khách hàng | Email | Ghi chú |
 |---|---|---|
-| Super Admin | `admin@woodcon.vn` | `demoadmin123` |
-| Quản lý kho | `kho@woodcon.vn` | `demoadmin123` |
-| Kế toán | `ketoan@woodcon.vn` | `demoadmin123` |
-| Nhân viên bán hàng | `nv1@woodcon.vn` | `demoadmin123` |
-| Nhân viên CSKH | `cskh@woodcon.vn` | `demoadmin123` |
-| Nhân viên giao hàng | `shipper@woodcon.vn` | `demoadmin123` |
-| Khách hàng (VIP, trust green) | `an@example.com` | `demoadmin123` |
-| Khách hàng (trust yellow) | `bich@example.com` | `demoadmin123` |
-| Khách hàng (trust red – cảnh báo COD) | `cuong@example.com` | `demoadmin123` |
+| Nguyễn Văn An | `an@example.com` | trust **green** |
+| Trần Thị Bích | `bich@example.com` | trust **yellow** |
+| Lê Hoàng Cương | `cuong@example.com` | trust **red** (cảnh báo COD) |
+| Phạm Minh Đức | `duc@example.com` | trust **green** |
+| Võ Thị Em | `em@example.com` | trust **yellow** |
+| Phan Tuấn Anh | `khach.tuananh@example.com` | trust **yellow** |
 
 > Đây là dữ liệu seed demo cho môi trường phát triển. Khi đưa lên production,
 > **bắt buộc đổi mật khẩu** và cấu hình Google OAuth / reCAPTCHA / Goong Maps thật.
